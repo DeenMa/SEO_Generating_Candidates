@@ -20,8 +20,8 @@ public class GenerateKeywords {
 	/*
 	 * Parameters define here ... 
 	 * */
-	private static String pathSource = ".\\data\\keywords\\source.txt";
-	private static String pathTarget = ".\\data\\keywords\\target.txt";
+	private static String pathEntities = ".\\data\\keywords\\entities.txt";
+	private static String pathIntents = ".\\data\\keywords\\intents.txt";
 	private static String pathWords = ".\\data\\keywords\\candidateWords.txt";
 	private static String pathPossibilities = ".\\data\\keywords\\candidatePossibilities.txt";
 	
@@ -224,7 +224,7 @@ public class GenerateKeywords {
 	}
 	
 	private static void writeSetToFile(List<Combo> set) {
-		try{
+		try {
 		    PrintWriter writer = new PrintWriter(pathWords, "UTF-8");
 		    for (int i = 0; i < set.size(); i++) {
 		    	writer.println(set.get(i).englishRepresentation);
@@ -234,7 +234,7 @@ public class GenerateKeywords {
 		   e.printStackTrace();
 		}
 		
-		try{
+		try {
 		    PrintWriter writer = new PrintWriter(pathPossibilities, "UTF-8");
 		    for (int i = 0; i < set.size(); i++) {
 		    	writer.println(set.get(i).possibility);
@@ -246,9 +246,9 @@ public class GenerateKeywords {
 	}
 
 	public static void main(String[] args) {
-		List<String> linesSource = getStringsFromFile(pathSource);
+		List<String> linesSource = getStringsFromFile(pathEntities);
 		HashMap<String, List<Combo>> data = parseLineSource(linesSource);
-		List<String> linesTarget = getStringsFromFile(pathTarget);
+		List<String> linesTarget = getStringsFromFile(pathIntents);
 		List<Combo> set = analyzeTarget(data, linesTarget);
 		sort(set);
 		writeSetToFile(set);
