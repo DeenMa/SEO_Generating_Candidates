@@ -25,6 +25,8 @@ public class GenerateKeywords {
 	private static String pathWords = ".\\data\\keywords\\candidateWords.txt";
 	private static String pathPossibilities = ".\\data\\keywords\\candidatePossibilities.txt";
 	
+	private static boolean displayUnlikelyCandidates = false;
+	
 	/*
 	 * Code starts here ...
 	 * */
@@ -167,7 +169,14 @@ public class GenerateKeywords {
 				comboOverall *= current.possibility;				
 			}
 			String completeEnglishSentence = sb.toString();
-			result.add(new Combo(completeEnglishSentence, comboOverall));
+			if (displayUnlikelyCandidates) {
+				result.add(new Combo(completeEnglishSentence, comboOverall));
+			} else {
+				double randomNum = Math.random();
+				if (comboOverall > randomNum) {
+					result.add(new Combo(completeEnglishSentence, comboOverall));
+				}
+			}
 			return;
 		}
 		String curChineseWord = chineseWords.get(index);
