@@ -1,0 +1,56 @@
+讯飞:iflytek/1,iflytech/0.4
+语音:speech/1,audio/0.6,voice/0.5
+音频:audio/1,speech/0.6,voice/0.5
+识别:recognition/1
+输入:input/1
+开放平台:open platform/1,speech cloud platform/0.7,cloud platform/0.5
+在线:online/1
+翻译:translation/1
+合成:synthesis/1,text-to-speech/1,tts/1
+语种:chinese/1,mandarin/0.7,English/0.7
+中文:chinese/1
+中国:chinese/1,china's/0.6
+文字:text/1
+转:to/1
+输入法:input/1
+转换:conversion/1
+讯飞听见:iflyrec/1
+软件:software/1,application/0.9,app/0.9
+工具:sdk/1,api/1
+官网:website/0.8,official website/1
+百度:baidu/1
+录制:recorded/1
+朗读:reading/1
+mp3:mp3/1
+转写:transcription/1,transcibe/0.4,conversion/0.4
+翻译机:translation machine/0.8,easy trans/0.3,easy trans 600/0.6
+视频:video/1
+流:stream/1,streaming/0.8
+其他公司:google/0.7,microsoft/0.4,amazon alexa/0.6,baidu/0.7
+手机操作系统:android/1,ios/1
+控制:control/1
+平台:platform/1
+科技:technology/1
+编程语言:python/0.8,java/1,c++/0.9,c/0.6
+文件:file/1
+生成:generation/1
+aiui:aiui/1
+离线:offline/1
+操作系统:pc/1,mac/1,linux/0.6
+科大:ustc/1
+实时:real-time/1,real time/0.8,simultaneous/0.4
+云:cloud/1
+语言:language/1
+搜索:search/1
+包:package/1
+开发者:developer/1
+人工智能:artificial intelligence/1,ai/0.7
+语音智能:speech intelligence/1
+人机:human machine/1,human-machine/1,human robot/0.6,human-robot/0.5
+交互:interaction/1
+界面:interface/1
+自然语言:natural language/1
+处理:processing/1
+理解:understanding/1
+公司:company/0.7,companies/1
+著名的:famous/0.8,renowned/0.5,reputable/0.5,great/0.9,outstanding/0.6,best/1
