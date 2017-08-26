@@ -47,17 +47,17 @@ public class GenerateKeywords {
 			possibility = p;
 		}
 	}
-		
-	private static HashMap<String, List<Combo>> getData() {
-		HashMap<String, List<Combo>> result = new HashMap<>();
+	
+	private static List<String> getStringsFromFile(String path) {
+		List<String> lines = new ArrayList<>();
 		BufferedReader br = null;
 		FileReader fr = null;
 		try {
-			fr = new FileReader(pathSource);
+			fr = new FileReader(path);
 			br = new BufferedReader(fr);
 			String sCurrentLine;
 			while ((sCurrentLine = br.readLine()) != null) {
-				parseLineSource(result, sCurrentLine);
+				lines.add(sCurrentLine);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -71,37 +71,42 @@ public class GenerateKeywords {
 				ex.printStackTrace();
 			}
 		}
-		return result;
+		return lines;
 	}
 	
-	private static void parseLineSource(HashMap<String, List<Combo>> data, String line) {
-		if (line == null || line.length() == 0) {
-			throw new RuntimeException("parseLine: current line is empty!");
-		}
-		// System.out.println("Current line is: " + line);
-		int len = line.length();
-		int index = 0;
-		StringBuilder chineseWordBuilder = new StringBuilder();
-		while (line.charAt(index) != ':') {
-			chineseWordBuilder.append(line.charAt(index));
+	private static HashMap<String, List<Combo>> parseLineSource(List<String> lines) {
+		checkValidity(lines);
+		HashMap<String, List<Combo>> data = new HashMap<>();
+		for (int curLineIndex = 0; curLineIndex < lines.size(); curLineIndex++) {
+			String curLine = lines.get(curLineIndex);
+			if (curLine == null || curLine.length() == 0) {
+				throw new RuntimeException("parseLineSource: line " + curLineIndex + " is empty!");
+			}
+			int len = curLine.length();
+			int index = 0;
+			StringBuilder chineseWordBuilder = new StringBuilder();
+			while (curLine.charAt(index) != ':') {
+				chineseWordBuilder.append(curLine.charAt(index));
+				index++;
+			}
+			String chineseWord = chineseWordBuilder.toString();
+			if (data.containsKey(chineseWord)) {
+				throw new RuntimeException("parseLine: we already have Chinese word "
+						+ chineseWord);
+			}
 			index++;
+			List<Combo> candidates = new ArrayList<>();
+			while (index < len) {
+				Combo combo = new Combo();
+				index = getEntry(curLine, index, combo);
+				candidates.add(combo);
+				index++;
+			}
+			data.put(chineseWord, candidates);
 		}
-		String chineseWord = chineseWordBuilder.toString();
-		if (data.containsKey(chineseWord)) {
-			throw new RuntimeException("parseLine: we already have Chinese word "
-					+ chineseWord);
-		}
-		index++;
-		List<Combo> candidates = new ArrayList<>();
-		while (index < len) {
-			Combo combo = new Combo();
-			index = getEntry(line, index, combo);
-			candidates.add(combo);
-			index++;
-		}
-		data.put(chineseWord, candidates);
+		return data;
 	}
-	
+		
 	private static int getEntry(String line, int index, Combo combo) {
 		StringBuilder englishWord = new StringBuilder();
 		StringBuilder possibilityString = new StringBuilder();
@@ -128,38 +133,23 @@ public class GenerateKeywords {
 		return Double.valueOf(str);
 	}
 	
-	private static List<Combo> analyzeTarget(HashMap<String, List<Combo>> data) {
+	private static List<Combo> analyzeTarget(HashMap<String, List<Combo>> data, 
+			List<String> lines) {
 		List<Combo> result = new ArrayList<>();
-		BufferedReader br = null;
-		FileReader fr = null;
-		try {
-			fr = new FileReader(pathTarget);
-			br = new BufferedReader(fr);
-			String sCurrentLine;
-			while ((sCurrentLine = br.readLine()) != null) {
-				parseLineTarget(data, result, sCurrentLine);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (br != null)
-					br.close();
-				if (fr != null)
-					fr.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
+		checkValidity(lines);
+		for (int curLineIndex = 0; curLineIndex < lines.size(); curLineIndex++) {
+			String curLine = lines.get(curLineIndex);
+			List<String> chineseWords = getWords(curLine);
+			List<Combo> currentEnglishCandidates = new ArrayList<>();
+			collectWords(data, result, currentEnglishCandidates, chineseWords, 0);
 		}
 		return result;
 	}
 	
-	private static void parseLineTarget(HashMap<String, List<Combo>> data, 
-			List<Combo> result, String line) {
-		// System.out.println("Currently parsing " + line);
-		List<String> chineseWords = getWords(line);
-		List<Combo> currentEnglishCandidates = new ArrayList<>();
-		collectWords(data, result, currentEnglishCandidates, chineseWords, 0);
+	private static void checkValidity(List<String> lines) {
+		if (lines == null || lines.size() == 0) {
+			throw new RuntimeException("parseLineSource: the content is empty!");
+		}
 	}
 	
 	private static void collectWords(HashMap<String, List<Combo>> data, 
@@ -256,8 +246,10 @@ public class GenerateKeywords {
 	}
 
 	public static void main(String[] args) {
-		HashMap<String, List<Combo>> data = getData();
-		List<Combo> set = analyzeTarget(data);
+		List<String> linesSource = getStringsFromFile(pathSource);
+		HashMap<String, List<Combo>> data = parseLineSource(linesSource);
+		List<String> linesTarget = getStringsFromFile(pathTarget);
+		List<Combo> set = analyzeTarget(data, linesTarget);
 		sort(set);
 		writeSetToFile(set);
 	}
